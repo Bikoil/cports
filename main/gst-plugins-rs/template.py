@@ -1,7 +1,7 @@
 pkgname = "gst-plugins-rs"
 # separate versioning from main gst
 pkgver = "0.13.1"
-pkgrel = 0
+pkgrel = 1
 build_style = "meson"
 configure_args = ["-Ddefault_library=shared"]
 hostmakedepends = [
@@ -45,6 +45,13 @@ def init_build(self):
 
 def post_install(self):
     self.install_license("LICENSE-MIT")
+
+
+@subpackage("gst-plugins-rs-gtk4")
+def _(self):
+    self.subdesc = "GTK4 sink"
+    self.install_if = [self.parent]
+    return ["usr/lib/gstreamer-1.0/libgstgtk4.so"]
 
 
 @subpackage("gst-plugins-rs-devel")
