@@ -1,7 +1,7 @@
 # TODO: service files, cleanup
 pkgname = "samba"
 pkgver = "4.21.0"
-pkgrel = 0
+pkgrel = 1
 build_style = "waf"
 configure_script = "buildtools/bin/waf"
 configure_args = [
@@ -95,6 +95,7 @@ license = "GPL-3.0-or-later"
 url = "https://www.samba.org"
 source = f"https://download.samba.org/pub/samba/stable/samba-{pkgver}.tar.gz"
 sha256 = "09bb56db4ce003cafdbebe9bad368c4f4ff1945f732d18077d52f36ab20cef88"
+patch_style = "patch"
 tool_flags = {"CFLAGS": ["-D_BSD_SOURCE"]}
 env = {"PYTHONHASHSEED": "1"}
 # check needs --enable-selftest, which needs extra system dependencies
@@ -128,7 +129,7 @@ def post_install(self):
     self.install_dir("usr/lib/cups/backend")
     self.install_link("usr/lib/cups/backend/smb", "../../../bin/smbspool")
     # private dir
-    self.install_dir("var/lib/samba/private", mode=0o750, empty=True)
+    self.install_tmpfiles(self.files_path / "tmpfiles.conf")
 
 
 @subpackage("samba-common")

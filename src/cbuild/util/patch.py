@@ -1,6 +1,5 @@
 from cbuild.core import chroot
 
-import shlex
 import shutil
 import pathlib
 import subprocess
@@ -26,16 +25,13 @@ def _determine_gnupatch(pkg):
     return _gnupatch
 
 
-def patch(pkg, patch_path, wrksrc=None, patch_args=[]):
+def _patch_one(pkg, patch_path, wrksrc, patch_args):
     patch_path = pathlib.Path(patch_path)
 
     if not patch_path.is_file():
         pkg.error(f"patch does not exist: {patch_path}")
 
-    pargs = ["-sNp1"]
-
-    if patch_args:
-        pargs += patch_args
+    pargs = ["-sNp1", *patch_args]
 
     # in bootstrap envs we might be using gnu patch with different args
     gnupatch = _determine_gnupatch(pkg)
@@ -45,15 +41,11 @@ def patch(pkg, patch_path, wrksrc=None, patch_args=[]):
     else:
         pargs.append("--no-backup-if-mismatch")
 
-    argsf = pathlib.Path(str(patch_path) + ".args")
-
-    if argsf.is_file():
-        pargs += shlex.split(argsf.read_text().strip())
-    elif pkg.patch_args:
-        pargs += pkg.patch_args
-
     patchfn = patch_path.name
     patchsfx = patch_path.suffix
+
+    if patchsfx != ".patch":
+        pkg.error(f"unknown patch type: {patchsfx}")
 
     wdir = pkg.srcdir
     cwdir = pkg.chroot_srcdir
@@ -65,31 +57,6 @@ def patch(pkg, patch_path, wrksrc=None, patch_args=[]):
         shutil.copy(patch_path, wdir)
     except Exception:
         pkg.error(f"could not copy patch '{patchfn}'")
-
-    if patchsfx == ".gz":
-        chroot.enter(
-            "gunzip",
-            cwdir / patchfn,
-            check=True,
-            bootstrapping=pkg.stage == 0,
-            ro_root=True,
-            unshare_all=True,
-        )
-        patchfn = patch_path.stem
-    elif patchsfx == ".bz2":
-        chroot.enter(
-            "bunzip2",
-            cwdir / patchfn,
-            check=True,
-            bootstrapping=pkg.stage == 0,
-            ro_root=True,
-            unshare_all=True,
-        )
-        patchfn = patch_path.stem
-    elif patchsfx == ".patch":
-        pass
-    else:
-        pkg.error(f"unknown patch type: {patchsfx}")
 
     pkg.log(f"patching: {patchfn}")
 
@@ -106,20 +73,32 @@ def patch(pkg, patch_path, wrksrc=None, patch_args=[]):
     )
 
 
-def patch_dir(pkg, patch_path, wrksrc=None, patch_args=[]):
-    patch_path = pathlib.Path(patch_path)
+def patch(pkg, patch_list, wrksrc=None, patch_args=[]):
+    for p in patch_list:
+        _patch_one(pkg, p, wrksrc, patch_args)
 
-    if not patch_path.is_dir():
-        pkg.error(f"patch directory does not exist: {patch_path}")
 
-    if (patch_path / "series").is_file():
-        with open(patch_path / "series") as f:
-            for line in f.readlines():
-                patch(pkg, patch_path / line.strip(), wrksrc, patch_args)
-    else:
-        for p in sorted(patch_path.glob("*")):
-            if not p.is_file():
-                continue
-            if p.suffix == ".args":
-                continue
-            patch(pkg, p, wrksrc, patch_args)
+def patch_git(pkg, patch_list, wrksrc=None, apply_args=[]):
+    if len(patch_list) == 0:
+        return
+
+    # first init a git repository, apply won't work without it
+    if subprocess.run(["git", "init", "-q"], cwd=pkg.srcdir).returncode != 0:
+        pkg.error("failed to initialize repository in source location")
+
+    # now apply everything in a batch
+    srcmd = [
+        "env",
+        "HOME=/dev/null",
+        "git",
+        "apply",
+        "--whitespace=nowarn",
+        *apply_args,
+    ]
+    for p in patch_list:
+        pkg.log(f"patching: {p.name}")
+        if subprocess.run([*srcmd, p], cwd=pkg.srcdir).returncode != 0:
+            pkg.error(f"failed to apply '{p.name}'")
+
+    # now remove the repo so we don't give build systems ideas
+    shutil.rmtree(pkg.srcdir / ".git")

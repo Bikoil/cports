@@ -1,5 +1,5 @@
 pkgname = "snapshot"
-pkgver = "46.3"
+pkgver = "47.0.1"
 pkgrel = 2
 build_style = "meson"
 hostmakedepends = [
@@ -17,9 +17,12 @@ makedepends = [
     "gst-plugins-base-devel",
     "gstreamer-devel",
     "libadwaita-devel",
+    "libseccomp-devel",
     "rust-std",
 ]
 depends = [
+    "glycin-loaders",
+    "gst-plugins-rs-gtk4",
     "gstreamer-libcamera",
     "gstreamer-pipewire",
 ]
@@ -30,7 +33,8 @@ url = "https://apps.gnome.org/Snapshot"
 source = (
     f"$(GNOME_SITE)/snapshot/{pkgver.split('.')[0]}/snapshot-{pkgver}.tar.xz"
 )
-sha256 = "45957a0415f454d63531491aa04795cee0ced4edddd5d8fa0d000f5ef0735b67"
+sha256 = "62a7f10c9021ba2e49e7e68e7eb89ef540c09f2c7ddf77c205e542c9dae8ffb1"
+patch_style = "patch"
 
 
 def init_build(self):

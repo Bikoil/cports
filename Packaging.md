@@ -250,6 +250,24 @@ hosts the builds may be run in. However, there may always be edge cases,
 and tests should not rely on edge cases - they must be reproducible across
 all environments `cbuild` may be run in.
 
+Also, Chimera systems should be stateless at their baseline. That means a
+system can be recreated from its world file, and all mutable configuration
+files are considered ephemeral. In practice this means:
+
+1) Anything installed in `/usr` is considered immutable; the package manager
+   should own all files and directories in there. This is generally already
+   the case. If a directory needs to be empty and present in there, you should
+   use the `file_modes` metadata to create them as `cbuild` will otherwise
+   clean them.
+2) Anything in `/etc` and `/var` is mutable and if the software in question
+   allows, should not be owned by the package manager. Any directories and
+   other state should be created through the `tmpfiles.d` mechanism, except
+   when this does not make sense (e.g. the parent dir is already populated
+   by the package and the new dirs are supplementary and so on). Notably, the
+   `/var` directory is forbidden in packages. This results in a system where
+   deletion of these dirs/files will result in them being re-created from
+   scratch upon next boot.
+
 <a id="template_hardening"></a>
 #### Hardening Templates
 
@@ -822,7 +840,13 @@ Keep in mind that default values may be overridden by build styles.
   explicit mode set here, otherwise they will not be allowed. That means
   any suid file installed by a package without the template re-declaring
   its mode is forbidden; the primary purpose is to make sure the packager
-  knows what kind of mode it needs to have.
+  knows what kind of mode it needs to have. This field can also be used
+  to create empty directories in the package (bypassing the cleanup system),
+  by specifying the path as starting with a plus (`+`). The mode and owner
+  is still applied to the directory. If you require a user/group that does
+  not exist in the environment by default, you can ensure it is created by
+  putting a file called `sysusers.conf` in the template directory, containing
+  configuration with the `sysusers(5)` syntax.
 * `file_xattrs` *(dict)* A dictionary of strings to dictionaries, where
   the string keys are file paths (relative to the package, e.g. `usr/foo`)
   and the dicts contain mappings of extended attribute names to values.
@@ -928,6 +952,9 @@ Keep in mind that default values may be overridden by build styles.
   The primary use for this is to give all "defaults" packages providing
   alternative program symlinks the same origin so they can replace each other
   freely without errors.
+* `patch_style` *(str)* The method to use for patching. The options are
+  `patch` (uses the `patch(1)` tool inside the sandbox) and `git` (uses
+  `git apply` from the host environment). The default is `git`.
 * `patch_args` *(list)* Options passed to `patch` when applying patches,
   in addition to the builtin ones (`-sNp1 -V none`). You can use this to
   override the strip count or pass additional options.
@@ -1002,17 +1029,6 @@ Keep in mind that default values may be overridden by build styles.
   the main description as ` (subdesc)`.
 * `tools` *(dict)* This can be used to override default tools. Refer to the
   section about tools for more information.
-* `system_users` *(list)* A list of users for cbuild. A user can take two
-  forms. It can either be a string (in the format `username` or `username:uid`)
-  for the simple case, or a `dict` containing at least the fields `name` and
-  `uid` (an integer) and optionally `desc`, `shell`, `groups`, `pgroup` and
-  `home`. Note that this does not affect the generated packages anyhow; the
-  only use is when something during the build expects these to exist, or
-  when the package is to contain entries owned by that user. You will always
-  need to couple it with a `sysusers` configuration file for the package.
-* `system_groups` *(list)* A list of groups to create. It contains strings,
-  which can be in the format `gname` or `gname:gid`. The above information
-  applies identically here.
 * `tool_flags` *(dict)* This can be used to override things such as `CFLAGS`
   or `LDFLAGS`. Refer to the section about tools and tool flags for more
   information.
@@ -3038,7 +3054,7 @@ Usage:
 self.install_files("data/foo", "usr/share")
 ```
 
-##### def install_dir(self, dest, mode = 0o755, empty = False)
+##### def install_dir(self, dest, mode = 0o755)
 
 Creates a directory `dest` in `destdir`.
 
@@ -3047,10 +3063,6 @@ Usage:
 ```
 self.install_dir("usr/include")
 ```
-
-The `empty` argument, if set to `True`, will result in the `.empty`
-file being created inside. This serves as a placeholder to prevent
-the directory's accidental removal.
 
 ##### def install_file(self, src, dest, mode = 0o644, name = None, glob = False)
 

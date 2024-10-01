@@ -1,6 +1,6 @@
 pkgname = "dinit-chimera"
 pkgver = "0.99.11"
-pkgrel = 0
+pkgrel = 2
 build_style = "meson"
 hostmakedepends = ["meson", "pkgconf"]
 makedepends = ["libkmod-devel", "linux-headers"]
@@ -24,7 +24,7 @@ triggers = [
     "/usr/lib/binfmt.d",
     "/usr/lib/modprobe.d",
     "/usr/lib/modules-load.d",
-    "/var/lib/swclock",
+    "/usr/lib/dinit.d/early/helpers",
 ]
 pkgdesc = "Chimera core services suite"
 maintainer = "q66 <q66@chimera-linux.org>"
@@ -49,11 +49,9 @@ def post_install(self):
     self.install_license("COPYING.md")
     self.install_file("^/locale.conf", "etc")
     self.install_tmpfiles("^/dinit.conf", name="dinit")
+    self.install_tmpfiles("^/utmp.conf", name="utmp")
     self.install_file("^/sd-tmpfiles-clean", "usr/libexec", mode=0o755)
     self.install_service("^/tmpfiles-clean", enable=True)
-    # swclock
-    self.install_dir("var/lib/swclock")
-    (self.destdir / "var/lib/swclock/timestamp").touch(0o644)
     # init symlink
     self.install_dir("usr/bin")
     self.install_link("usr/bin/init", "dinit")
@@ -73,6 +71,9 @@ def post_install(self):
     self.install_file(
         "^/sysctl.d/bpf.conf", "usr/lib/sysctl.d", name="20-bpf.conf"
     )
+    # provided by base-files
+    self.uninstall("usr/lib/tmpfiles.d/var.conf")
+    self.uninstall("usr/lib/tmpfiles.d/tmp.conf")
 
 
 @subpackage("dinit-chimera-kdump", _have_kexec_tools)

@@ -1,5 +1,5 @@
 pkgname = "nautilus"
-pkgver = "46.2"
+pkgver = "47.0"
 pkgrel = 0
 build_style = "meson"
 configure_args = ["-Dtests=headless"]
@@ -23,16 +23,17 @@ makedepends = [
     "libcloudproviders-devel",
     "libportal-devel",
     "libxml2-devel",
-    "tracker-devel",
+    "tinysparql-devel",
 ]
-depends = ["desktop-file-utils", "tracker", "tracker-miners"]
-checkdepends = ["dbus", "tracker", "tracker-miners", "python-gobject"]
+depends = ["desktop-file-utils", "localsearch", "tinysparql"]
+checkdepends = ["dbus", "localsearch", "tinysparql", "python-gobject"]
 pkgdesc = "GNOME file manager"
 maintainer = "q66 <q66@chimera-linux.org>"
 license = "GPL-2.0-or-later AND LGPL-2.1-or-later"
 url = "https://wiki.gnome.org/Apps/Files"
 source = f"$(GNOME_SITE)/nautilus/{pkgver[:pkgver.find('.')]}/nautilus-{pkgver}.tar.xz"
-sha256 = "6ee8c99019b9e3447f6918d68232a20deca89e5525c05805432b7d8840ca71fa"
+sha256 = "334264cdd9edbfd95ee7bcaafe442ebed31acca3f2d9b90f3eda30eacfd0387a"
+patch_style = "patch"
 options = ["!cross"]
 
 

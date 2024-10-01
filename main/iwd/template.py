@@ -1,6 +1,6 @@
 pkgname = "iwd"
 pkgver = "2.22"
-pkgrel = 0
+pkgrel = 1
 build_style = "gnu_configure"
 configure_args = [
     # junk cflags that redefine FORTIFY
@@ -23,6 +23,7 @@ license = "LGPL-2.1-or-later"
 url = "https://iwd.wiki.kernel.org"
 source = f"$(KERNEL_SITE)/network/wireless/iwd-{pkgver}.tar.xz"
 sha256 = "2c41c5da9924b90f8383b293b0c0b3d0bfb34fdc8822d8d0d37ec100707f263e"
+patch_style = "patch"
 tool_flags = {
     "CFLAGS": ["-Wno-unknown-warning-option", "-Wno-duplicate-decl-specifier"]
 }
@@ -34,5 +35,3 @@ def post_install(self):
     self.install_service(self.files_path / "iwd")
     self.install_service(self.files_path / "ead")
     self.install_tmpfiles(self.files_path / "iwd.conf")
-
-    self.install_dir("etc/iwd", empty=True)

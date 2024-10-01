@@ -394,6 +394,7 @@ core_fields = [
     ("archs", None, list, False, False, False),
     # build directory and patches
     ("build_wrksrc", "", str, False, False, False),
+    ("patch_style", None, str, False, False, False),
     ("patch_args", [], list, False, False, False),
     ("prepare_after_patch", False, bool, False, False, False),
     # dependency lists
@@ -449,9 +450,6 @@ core_fields = [
     ("compression", None, "comp", False, True, True),
     # wrappers
     ("exec_wrappers", [], list, False, False, False),
-    # script generators
-    ("system_users", [], list, False, True, False),
-    ("system_groups", [], list, False, True, False),
     # fields relating to build fields
     # cmake
     ("cmake_dir", None, str, False, False, False),
@@ -525,6 +523,7 @@ core_fields_priority = [
     ("source_paths", True),
     ("sha256", True),
     ("debug_level", True),
+    ("patch_style", True),
     ("patch_args", True),
     ("tools", True),
     ("tool_flags", True),
@@ -539,8 +538,6 @@ core_fields_priority = [
     ("hardening", True),
     ("options", True),
     ("exec_wrappers", True),
-    ("system_users", True),
-    ("system_groups", True),
     ("restricted", True),
     ("broken", True),
 ]
@@ -1240,19 +1237,17 @@ class Template(Package):
 
         self.source_date_epoch = int(time.time())
 
-        if not shutil.which("git"):
-            # no git, not reproducible
-            return
-
-        # skip for shallow clones or non-repos
+        # skip for shallow clones
         shal = subprocess.run(
             ["git", "rev-parse", "--is-shallow-repository"],
             capture_output=True,
             cwd=self.template_path,
         )
+
         if shal.returncode != 0:
-            # not a git repository
+            # not a git repository? should never happen (it's checked early)
             return
+
         if shal.stdout.strip() == b"true":
             # shallow clone
             return
@@ -2000,7 +1995,7 @@ class Template(Package):
             self.install_dir(dest)
             shutil.copy2(path, dfn)
 
-    def install_dir(self, dest, mode=0o755, empty=False):
+    def install_dir(self, dest, mode=0o755):
         dest = pathlib.Path(dest)
         if dest.is_absolute():
             raise errors.TracebackException(
@@ -2011,8 +2006,6 @@ class Template(Package):
             dirp.mkdir(parents=True)
         if mode is not None:
             dirp.chmod(mode)
-        if empty:
-            (dirp / ".empty").touch(mode=0o644)
 
     def install_file(self, src, dest, mode=0o644, name=None, glob=False):
         if not glob:
@@ -2212,6 +2205,12 @@ def _split_dlinks(pkg):
     pkg.take("usr/lib/dinit.d/user/boot.d", missing_ok=True)
 
 
+def _split_bashcomp(pkg):
+    # this is forbidden, but the linter catches it later in the bash path
+    pkg.take("etc/bash_completion.d", missing_ok=True)
+    pkg.take("usr/share/bash-completion", missing_ok=True)
+
+
 def _split_fishcomp(pkg):
     # this is forbidden, but the linter catches it later in the fish path
     pkg.take("usr/share/fish/completions", missing_ok=True)
@@ -2260,7 +2259,7 @@ autopkgs = [
         "bashcomp",
         "bash completions",
         "bash-completion",
-        lambda p: p.take("usr/share/bash-completion", missing_ok=True),
+        _split_bashcomp,
     ),
     (
         "zshcomp",

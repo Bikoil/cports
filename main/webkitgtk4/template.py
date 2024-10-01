@@ -1,6 +1,6 @@
 # mirrors the gtk3 webkitgtk template
 pkgname = "webkitgtk4"
-pkgver = "2.44.4"
+pkgver = "2.46.1"
 pkgrel = 1
 build_style = "cmake"
 configure_args = [
@@ -69,6 +69,7 @@ makedepends = [
     "libseccomp-devel",
     "libsecret-devel",
     "libsoup-devel",
+    "libspiel-devel",
     "libtasn1-devel",
     "libwebp-devel",
     "libwpe-devel",
@@ -81,6 +82,7 @@ makedepends = [
     "mesa-devel",
     "openjpeg-devel",
     "sqlite-devel",
+    "sysprof-capture",
     "wayland-devel",
     "wayland-protocols",
     "woff2-devel",
@@ -97,8 +99,9 @@ maintainer = "q66 <q66@chimera-linux.org>"
 license = "LGPL-2.1-or-later AND BSD-2-Clause"
 url = "https://webkitgtk.org"
 source = f"{url}/releases/webkitgtk-{pkgver}.tar.xz"
-sha256 = "2ce4ec1b78413035037aba8326b31ed72696626b7bea7bace5e46ac0d8cbe796"
+sha256 = "2a14faac359aff941d0bc4443eb5537e3702bcaf316b0a129e0e65f3ff8eaac0"
 debug_level = 1  # otherwise LTO link runs out of memory + fat debuginfo
+patch_style = "patch"
 tool_flags = {
     "CFLAGS": ["-DNDEBUG"],
     "CXXFLAGS": [

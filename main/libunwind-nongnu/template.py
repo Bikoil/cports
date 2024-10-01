@@ -36,14 +36,6 @@ if self.profile().arch == "aarch64":
     tool_flags["CFLAGS"] = ["-mno-outline-atomics"]
 
 
-def post_extract(self):
-    # bsd patch doesn't support renames
-    self.mv(
-        "src/unwind/libunwind.pc.in",
-        "src/unwind/libunwind-nongnu.pc.in",
-    )
-
-
 def post_install(self):
     self.install_license("COPYING")
     # test programs (installed with tests enabled)

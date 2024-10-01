@@ -1,6 +1,6 @@
 pkgname = "kmod"
 pkgver = "33"
-pkgrel = 1
+pkgrel = 2
 build_style = "gnu_configure"
 configure_args = [
     "--with-zlib",
@@ -22,6 +22,7 @@ license = "GPL-2.0-or-later AND LGPL-2.1-or-later"
 url = "https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git"
 source = f"$(KERNEL_SITE)/utils/kernel/kmod/kmod-{pkgver}.tar.gz"
 sha256 = "d7c59c76bb3dd0eeeecdb1302365cf4bd5cb54e977be43a00efa2c96c519c1dc"
+patch_style = "patch"
 # broken testsuite build system
 options = ["!check"]
 
@@ -32,11 +33,7 @@ def post_install(self):
         "usr/lib/depmod.d",
         name="search.conf",
     )
-
-    # empty dirs
-    self.install_dir("etc/depmod.d", empty=True)
-    self.install_dir("etc/modprobe.d", empty=True)
-    self.install_dir("usr/lib/modprobe.d", empty=True)
+    self.install_tmpfiles(self.files_path / "tmpfiles.conf")
 
     # initramfs-tools
     self.install_initramfs(self.files_path / "kmod.initramfs-tools")

@@ -1,6 +1,6 @@
 pkgname = "shadow"
 pkgver = "4.16.0"
-pkgrel = 2
+pkgrel = 3
 build_style = "gnu_configure"
 configure_args = [
     "--enable-shared",
@@ -21,13 +21,15 @@ configure_gen = []
 make_dir = "."
 makedepends = ["acl-devel", "linux-pam-devel", "linux-headers"]
 depends = ["linux-pam", "base-shells"]
-triggers = ["/var/lib/shadow"]
+# self-trigger
+triggers = ["/usr/share/shadow"]
 pkgdesc = "Shadow password file utilities"
 maintainer = "q66 <q66@chimera-linux.org>"
 license = "BSD-3-Clause"
 url = "https://github.com/shadow-maint/shadow"
 source = f"{url}/releases/download/{pkgver}/shadow-{pkgver}.tar.xz"
 sha256 = "b78e3921a95d53282a38e90628880624736bf6235e36eea50c50835f59a3530b"
+patch_style = "patch"
 file_modes = {
     "usr/bin/chage": ("root", "root", 0o4755),
     "usr/bin/chfn": ("root", "root", 0o4755),
@@ -40,6 +42,7 @@ file_modes = {
     "usr/bin/passwd": ("root", "root", 0o4755),
     "usr/bin/sg": ("root", "root", 0o4755),
     "usr/bin/su": ("root", "root", 0o4755),
+    "+usr/share/shadow": ("root", "root", 0o755, True),
 }
 hardening = ["!vis", "!cfi"]
 # messes with filesystem
@@ -106,9 +109,6 @@ def post_install(self):
         "ulckpwdf",
     ]:
         self.install_link(f"usr/share/man/man3/{mp}.3", "getspnam.3")
-
-    # trigger
-    self.install_dir("var/lib/shadow", empty=True)
 
     self.install_license(self.files_path / "LICENSE")
 
