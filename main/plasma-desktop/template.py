@@ -1,9 +1,13 @@
 pkgname = "plasma-desktop"
-pkgver = "6.1.5"
+pkgver = "6.2.0"
 pkgrel = 0
 build_style = "cmake"
 # FIXME: missing layout memory xml file? QTemporaryFile broken?
-make_check_args = ["-E", "kcm-keyboard-keyboard_memory_persister_test"]
+# tst_calibrationtool: broken on ppc64le
+make_check_args = [
+    "-E",
+    "(kcm-keyboard-keyboard_memory_persister_test|tst_calibrationtool)",
+]
 make_check_env = {"QT_QPA_PLATFORM": "offscreen"}
 make_check_wrapper = ["dbus-run-session"]
 hostmakedepends = [
@@ -104,13 +108,17 @@ maintainer = "Jami Kettunen <jami.kettunen@protonmail.com>"
 license = "GPL-2.0-only AND LGPL-2.1-only"
 url = "https://kde.org/plasma-desktop"
 source = f"$(KDE_SITE)/plasma/{pkgver}/plasma-desktop-{pkgver}.tar.xz"
-sha256 = "d9e236c9a9a332d8b7b4edde44c65d0b0ec38ea75adc5bbfa21a6c4c7f4261c2"
+sha256 = "0ea38e20b9c4163857db920ea80c9740a29e561886b5feb9f20f938598692709"
 hardening = ["vis"]
 
 # most kdepim stuff depends on messagelib which depends on qtwebengine
 _have_kdepim = False
 if self.profile().arch in ["aarch64", "ppc64le", "x86_64"]:
     _have_kdepim = True
+
+
+def post_install(self):
+    self.uninstall("usr/lib/systemd/user/plasma-kaccess.service")
 
 
 @subpackage("plasma-desktop-meta")
@@ -177,7 +185,7 @@ def _(self):
 @subpackage("plasma-desktop-apps-meta")
 def _(self):
     self.subdesc = "apps recommends package"
-    self.install_if = [self.parent]
+    self.install_if = [self.with_pkgver("plasma-desktop-meta")]
     self.depends = [
         # - core
         "discover",  # extra app management
@@ -253,7 +261,7 @@ def _(self):
 @subpackage("plasma-desktop-multimedia-meta")
 def _(self):
     self.subdesc = "multimedia recommends package"
-    self.install_if = [self.parent]
+    self.install_if = [self.with_pkgver("plasma-desktop-meta")]
     self.depends = [
         "audiocd-kio",  # kio plugin for audio cds
         "audiotube",  # youtube music client
@@ -272,7 +280,7 @@ def _(self):
 @subpackage("plasma-desktop-devtools-meta")
 def _(self):
     self.subdesc = "devtools recommends package"
-    self.install_if = [self.parent]
+    self.install_if = [self.with_pkgver("plasma-desktop-meta")]
     self.depends = [
         "heaptrack",
         "kcachegrind",
@@ -285,7 +293,7 @@ def _(self):
 @subpackage("plasma-desktop-games-meta")
 def _(self):
     self.subdesc = "games recommends package"
-    self.install_if = [self.parent]
+    self.install_if = [self.with_pkgver("plasma-desktop-meta")]
     self.depends = [
         "kpat",
     ]
@@ -296,7 +304,7 @@ def _(self):
 @subpackage("plasma-desktop-accessibility-meta")
 def _(self):
     self.subdesc = "accessibility recommends package"
-    self.install_if = [self.parent]
+    self.install_if = [self.with_pkgver("plasma-desktop-meta")]
     self.depends = [
         "accessibility-inspector",  # accesibility tree inspector
         # "kmag",  # magnifier TODO: broken?
@@ -313,7 +321,7 @@ def _(self):
 def _(self):
     # contact/calendar/etc
     self.subdesc = "kdepim recommends package"
-    self.install_if = [self.parent]
+    self.install_if = [self.with_pkgver("plasma-desktop-meta")]
     self.depends = [
         "akonadi-calendar-tools",
         "akonadi-import-wizard",

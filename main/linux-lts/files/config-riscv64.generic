@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/riscv 6.6.53 Kernel Configuration
+# Linux/riscv 6.6.54 Kernel Configuration
 #
 CONFIG_CC_VERSION_TEXT="clang version 18.1.8"
 CONFIG_GCC_VERSION=0
@@ -511,7 +511,7 @@ CONFIG_ACPI_CONFIGFS=m
 CONFIG_ACPI_PFRUT=m
 CONFIG_ACPI_PCC=y
 # CONFIG_ACPI_FFH is not set
-# CONFIG_PMIC_OPREGION is not set
+CONFIG_PMIC_OPREGION=y
 CONFIG_CPU_MITIGATIONS=y
 
 #
