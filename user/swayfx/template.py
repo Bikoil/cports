@@ -17,7 +17,6 @@ makedepends = [
     "wayland-devel",
     "wayland-protocols",
     "wlroots0.17-devel",
-    "sway",
 ]
 pkgdesc = "Sway, but with eyecandy!"
 maintainer = "bikoil <biko@atl.tools>"
