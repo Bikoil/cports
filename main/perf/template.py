@@ -1,6 +1,6 @@
 pkgname = "perf"
-pkgver = "6.11.2"
-pkgrel = 0
+pkgver = "6.11.3"
+pkgrel = 1
 build_wrksrc = "tools/perf"
 build_style = "makefile"
 make_build_args = [
@@ -17,6 +17,7 @@ make_build_args = [
     "V=1",
     "WERROR=0",
     "libdir=/usr/lib",
+    "perfexecdir=/usr/lib/perf-core",
     "mandir=/usr/share/man",
     "prefix=/usr",
     "sbindir=/usr/bin",
@@ -57,7 +58,7 @@ maintainer = "psykose <alice@ayaya.dev>"
 license = "GPL-2.0-only"
 url = "https://perf.wiki.kernel.org/index.php/Main_Page"
 source = f"https://cdn.kernel.org/pub/linux/kernel/v{pkgver[:pkgver.find('.')]}.x/linux-{pkgver}.tar.xz"
-sha256 = "ec9ef7a0b9cebb55940e1ef87a1f9e1004b10456a119dc386bb3e565b0d39c42"
+sha256 = "057263d0afc17d5253794afd3d239ba4da4aa734b22fa36c1665f41b95449b73"
 # nope
 # docs are a single tips file that gets displayed in the TUI
 options = ["!check", "!splitdoc"]
@@ -81,4 +82,4 @@ def post_install(self):
     self.install_completion("perf-completion.sh", "bash")
     self.install_completion("perf-completion.sh", "zsh")
     # pointless tests
-    self.uninstall("usr/libexec/perf-core/tests")
+    self.uninstall("usr/lib/perf-core/tests")
