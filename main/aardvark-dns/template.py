@@ -1,5 +1,5 @@
 pkgname = "aardvark-dns"
-pkgver = "1.12.2"
+pkgver = "1.13.1"
 pkgrel = 0
 build_style = "cargo"
 hostmakedepends = ["cargo-auditable"]
@@ -9,12 +9,12 @@ maintainer = "q66 <q66@chimera-linux.org>"
 license = "Apache-2.0"
 url = "https://github.com/containers/aardvark-dns"
 source = f"{url}/archive/v{pkgver}.tar.gz"
-sha256 = "19317d97525c19135b31f76101b9c13bf2b009cecfc11f467b2ab30fb2641867"
+sha256 = "8c21dbdb6831d61d52dde6ebc61c851cfc96ea674cf468530b44de6ee9e6f49e"
 
 
 def install(self):
     self.install_file(
         f"target/{self.profile().triplet}/release/aardvark-dns",
-        "usr/libexec/podman",
+        "usr/lib/podman",
         0o755,
     )

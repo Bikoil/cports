@@ -1,7 +1,7 @@
 pkgname = "php8.3"
 _majver = "8.3"
-pkgver = f"{_majver}.12"
-pkgrel = 0
+pkgver = f"{_majver}.13"
+pkgrel = 1
 _apiver = "20230831"
 build_style = "gnu_configure"
 configure_args = [
@@ -123,7 +123,7 @@ maintainer = "Renato Botelho do Couto <renato@netgate.com>"
 license = "PHP-3.01"
 url = "https://www.php.net"
 source = f"{url}/distributions/php-{pkgver}.tar.gz"
-sha256 = "7090e551e05b26384546345d6a162c71b74550febf75bdfd16dfd1f0cfa8647c"
+sha256 = "ffe34317d2688ed3161809c90ca4135c84ebfdfd12a46880a264d7d1e1d7739a"
 
 
 def post_patch(self):
@@ -179,8 +179,6 @@ def post_patch(self):
         "ext/gettext/tests/bug53251.phpt",
         "ext/gettext/tests/gettext_bind_textdomain_codeset-retval.phpt",
         "ext/gettext/tests/gettext_bindtextdomain-cwd.phpt",
-        "ext/intl/tests/locale_get_display_name8.phpt",
-        "ext/intl/tests/locale_get_display_variant2.phpt",
         "ext/posix/tests/posix_errno_variation1.phpt",
         "ext/zip/tests/oo_encryption.phpt",
         "sapi/cli/tests/009.phpt",
@@ -209,6 +207,10 @@ def post_patch(self):
         "ext/zlib/tests/bug48725.phpt",
         # most of these try connect to an ldap server and wait for timeout then autoskip
         "ext/ldap/tests/*.phpt",
+        # icu 76
+        "ext/intl/tests/bug62070_3.phpt",
+        "ext/intl/tests/collator_get_sort_key_variant7.phpt",
+        "ext/intl/tests/timezone_IDforWindowsID_basic2.phpt",
     ]:
         self.rm(f, glob=True)
 
@@ -216,7 +218,7 @@ def post_patch(self):
 def init_check(self):
     # injected via patch
     # also seem to hang sometimes with too many jobs
-    self.make_check_args += [f"PHP_RUN_TESTS_ARGS=-j{min(4, self.make_jobs)}"]
+    self.make_check_args += [f"PHP_RUN_TESTS_ARGS=-j{min(6, self.make_jobs)}"]
 
 
 def init_install(self):
@@ -270,7 +272,7 @@ def _(self):
     # this is the default version
     self.provider_priority = 100
     return [
-        f"@etc/dinit.d/php-fpm=>php-fpm{_majver}",
+        f"@usr/lib/dinit.d/php-fpm=>php-fpm{_majver}",
         f"@usr/bin/pear=>pear{_majver}",
         f"@usr/bin/peardev=>peardev{_majver}",
         f"@usr/bin/pecl=>pecl{_majver}",

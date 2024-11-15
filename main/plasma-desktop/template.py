@@ -1,6 +1,6 @@
 pkgname = "plasma-desktop"
-pkgver = "6.2.0"
-pkgrel = 1
+pkgver = "6.2.3"
+pkgrel = 0
 build_style = "cmake"
 # FIXME: missing layout memory xml file? QTemporaryFile broken?
 # tst_calibrationtool: broken on ppc64le
@@ -108,7 +108,7 @@ maintainer = "Jami Kettunen <jami.kettunen@protonmail.com>"
 license = "GPL-2.0-only AND LGPL-2.1-only"
 url = "https://kde.org/plasma-desktop"
 source = f"$(KDE_SITE)/plasma/{pkgver}/plasma-desktop-{pkgver}.tar.xz"
-sha256 = "0ea38e20b9c4163857db920ea80c9740a29e561886b5feb9f20f938598692709"
+sha256 = "621ef18e65d75378320881c0c5d4866f390320b0b2abafebcb33d7546168632a"
 hardening = ["vis"]
 
 # most kdepim stuff depends on messagelib which depends on qtwebengine
@@ -133,6 +133,9 @@ def _(self):
         # breeze gtk theme
         "breeze-gtk",
         "kde-gtk-config",
+        # QImage plugins for various images
+        "kimageformats",
+        "qt6-qtimageformats",
         # ?
         "baloo",  # search
         "bluedevil",  # bluetooth

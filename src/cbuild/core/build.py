@@ -3,6 +3,7 @@ from cbuild.core import template, update_check as uc, pkg as pkgm, errors
 from cbuild.util import flock
 from cbuild.apk import cli as apk, generate as apkgen, sign as asign
 
+import builtins
 import importlib
 import os
 import pty
@@ -133,6 +134,21 @@ def register_hooks():
             hooks[stepn].sort(key=lambda v: v[1])
 
 
+def _restricted_importer(name, globals=None, locals=None, fromlist=(), level=0):
+    # a silly way to check if the import is inside the template :)
+    if (
+        globals
+        and "pkgname" in globals
+        and "pkgver" in globals
+        and "pkgrel" in globals
+    ):
+        if name != "cbuild.util":
+            raise ImportError(
+                f"only modules from cbuild.util allowed in template (got: '{name}')"
+            )
+    return importlib.__import__(name, globals, locals, fromlist, level)
+
+
 def run_pkg_func(pkg, func, funcn=None, desc=None, on_subpkg=False):
     if not funcn:
         if not hasattr(pkg, func):
@@ -143,12 +159,15 @@ def run_pkg_func(pkg, func, funcn=None, desc=None, on_subpkg=False):
         desc = funcn
     pkg.log(f"running \f[cyan]{desc}\f[]\f[bold]...")
     fpid, oldout, olderr = redir_log(pkg)
+    oldimp = builtins.__import__
+    builtins.__import__ = _restricted_importer
     try:
         if on_subpkg:
             func()
         else:
             func(pkg)
     finally:
+        builtins.__import__ = oldimp
         unredir_log(pkg, fpid, oldout, olderr)
     return True
 

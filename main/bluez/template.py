@@ -1,5 +1,5 @@
 pkgname = "bluez"
-pkgver = "5.78"
+pkgver = "5.79"
 pkgrel = 0
 build_style = "gnu_configure"
 configure_args = [
@@ -13,6 +13,7 @@ configure_args = [
     "--enable-sixaxis",
     "--enable-threads",
     "--with-udevdir=/usr/lib/udev",
+    "--libexecdir=/usr/lib",  # XXX drop libexec
 ]
 hostmakedepends = [
     "automake",
@@ -33,12 +34,13 @@ makedepends = [
     "readline-devel",
     "udev-devel",
 ]
+depends = ["dinit-dbus"]
 pkgdesc = "Linux Bluetooth stack"
 maintainer = "q66 <q66@chimera-linux.org>"
 license = "GPL-2.0-or-later AND LGPL-2.1-or-later"
 url = "http://www.bluez.org"
 source = f"$(KERNEL_SITE)/bluetooth/bluez-{pkgver}.tar.xz"
-sha256 = "830fed1915c5d375b8de0f5e6f45fcdea0dcc5ff5ffb3d31db6ed0f00d73c5e3"
+sha256 = "4164a5303a9f71c70f48c03ff60be34231b568d93a9ad5e79928d34e6aa0ea8a"
 tool_flags = {
     "CFLAGS": ["-Wno-deprecated-declarations"],
     # workaround for --gc-sections breaking in test files

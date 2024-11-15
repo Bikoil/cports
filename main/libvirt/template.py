@@ -1,8 +1,9 @@
 pkgname = "libvirt"
-pkgver = "10.8.0"
+pkgver = "10.9.0"
 pkgrel = 0
 build_style = "meson"
 configure_args = [
+    "--libexecdir=/usr/lib",  # XXX drop libexec
     "-Dattr=enabled",
     "-Dblkid=enabled",
     "-Dcapng=enabled",
@@ -78,13 +79,13 @@ checkdepends = [
     "python-flake8",
     "python-pytest",
 ]
-depends = ["dbus", "dnsmasq", "virtiofsd-meta"]
+depends = ["dinit-dbus", "dnsmasq", "virtiofsd-meta"]
 pkgdesc = "API, daemon, and management tool for virtualization"
 maintainer = "cesorious <cesorious@gmail.com>"
 license = "LGPL-2.1-only"
 url = "https://libvirt.org"
 source = f"https://download.libvirt.org/libvirt-{pkgver}.tar.xz"
-sha256 = "57e3e8238d31a197f1b26b958bd2be71f99f271a822132afa66f70b7c2100984"
+sha256 = "2473db10bb9b9992c02897cef4b26ae58885ff357cea5f9ce3ec9e008f6b5b3a"
 
 
 def post_install(self):

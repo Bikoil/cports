@@ -1,6 +1,6 @@
 pkgname = "base-kernel"
 pkgver = "0.2"
-pkgrel = 3
+pkgrel = 4
 depends = [
     "kmod",
     "procps",
@@ -17,14 +17,13 @@ options = ["!check", "keepempty"]
 
 def install(self):
     # kernel.d helpers
+    self.install_dir("usr/lib/base-kernel")
     self.install_dir("usr/libexec/base-kernel")
 
     for f in [
         "kernel-clean-initramfs",
-        "kernel-root-detect",
         "kernel-pre-upgrade",
         "kernel-post-upgrade",
-        "run-kernel-d",
         "script-funcs",
         "script-pre-deinstall",
         "script-pre-install",
@@ -35,6 +34,16 @@ def install(self):
         self.install_file(
             self.files_path / "libexec" / f,
             "usr/libexec/base-kernel",
+            mode=0o755,
+        )
+
+    for f in [
+        "kernel-root-detect",
+        "run-kernel-d",
+    ]:
+        self.install_file(
+            self.files_path / "libexec" / f,
+            "usr/lib/base-kernel",
             mode=0o755,
         )
 
@@ -84,6 +93,18 @@ def install(self):
         mode=0o755,
         name="chimera-prunekernels",
     )
+
+    # setup and prune hooks; WIP so don't install for now
+    # self.install_file(
+    #    self.files_path / "00-setup-kernels.sh",
+    #    "usr/lib/kernel.d",
+    #    mode=0o755,
+    # )
+    # self.install_file(
+    #    self.files_path / "05-prune-kernels.sh",
+    #    "usr/lib/kernel.d",
+    #    mode=0o755,
+    # )
 
 
 @subpackage("base-kernel-devel")

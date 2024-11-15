@@ -1,11 +1,12 @@
 pkgname = "firefox"
-pkgver = "131.0.2"
+pkgver = "132.0.2"
 pkgrel = 0
 hostmakedepends = [
     "automake",
     "cargo",
     "cbindgen",
     "clang-devel",
+    "dbus",
     "gettext",
     "libtool",
     "llvm-devel",
@@ -63,7 +64,7 @@ maintainer = "q66 <q66@chimera-linux.org>"
 license = "GPL-3.0-only AND LGPL-2.1-only AND LGPL-3.0-only AND MPL-2.0"
 url = "https://www.mozilla.org/firefox"
 source = f"$(MOZILLA_SITE)/firefox/releases/{pkgver}/source/firefox-{pkgver}.source.tar.xz"
-sha256 = "040e834ac94dd5246f9d77a66f7b43c43c62f538d00b5f94597534dc1db77616"
+sha256 = "329e1764f4b4e13f11dcf1fd7b3c6d8f80e512e8b7ed5bf65fbe44749c2610e9"
 debug_level = 1  # defatten, especially with LTO
 tool_flags = {
     "LDFLAGS": ["-Wl,-rpath=/usr/lib/firefox", "-Wl,-z,stack-size=2097152"]
@@ -200,6 +201,8 @@ def configure(self):
             for d in self.cwd.glob("obj-*"):
                 ldp = self.chroot_cwd / d.name / "dist/firefox"
             self.do(
+                "dbus-run-session",
+                "--",
                 "xvfb-run",
                 "-s",
                 "-screen 0 1920x1080x24",

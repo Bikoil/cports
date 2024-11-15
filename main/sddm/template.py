@@ -1,6 +1,6 @@
 pkgname = "sddm"
 pkgver = "0.21.0"
-pkgrel = 1
+pkgrel = 3
 build_style = "cmake"
 configure_args = [
     "-DBUILD_MAN_PAGES=ON",
@@ -26,7 +26,7 @@ makedepends = [
     "qt6-qttools-devel",
 ]
 depends = [
-    "dbus",
+    "dinit-dbus",
     "elogind",
     "plasma-workspace",
     "turnstile",
@@ -59,7 +59,7 @@ def post_install(self):
     # and breeze just looks way better
     self.install_file(
         self.files_path / "10-breeze-theme.conf",
-        "usr/lib/sddm/sddm.conf.d/10-breeze-theme.conf",
+        "usr/lib/sddm/sddm.conf.d",
     )
     # all unusable
     self.uninstall("usr/share/sddm/themes")

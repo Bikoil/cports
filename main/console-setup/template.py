@@ -1,5 +1,5 @@
 pkgname = "console-setup"
-pkgver = "1.230"
+pkgver = "1.232"
 pkgrel = 1
 build_style = "makefile"
 make_build_target = "build-linux"
@@ -19,7 +19,7 @@ maintainer = "q66 <q66@chimera-linux.org>"
 license = "GPL-2.0-or-later AND custom:console-setup"
 url = "https://salsa.debian.org/installer-team/console-setup"
 source = f"{url}/-/archive/{pkgver}/console-setup-{pkgver}.tar.gz"
-sha256 = "9615f3b75c24b6cd10a6fd87df4175447f51d0ce86c6b57185857c54295e259f"
+sha256 = "3b5b8a672853489d2706cc8be4ed74a28ff722743191c1e9587e1e57975fd5b8"
 # no tests
 options = ["bootstrap", "!check"]
 
@@ -42,9 +42,7 @@ def install(self):
 
 def post_install(self):
     self.install_license("debian/copyright")
-    self.install_file(
-        self.files_path / "dinit-console", "usr/libexec", mode=0o755
-    )
+    self.install_file(self.files_path / "dinit-console", "usr/lib", mode=0o755)
 
 
 @subpackage("console-setup-xkb")

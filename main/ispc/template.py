@@ -1,5 +1,5 @@
 pkgname = "ispc"
-pkgver = "1.24.0"
+pkgver = "1.25.3"
 pkgrel = 0
 archs = ["x86_64", "aarch64", "armv7"]
 build_style = "cmake"
@@ -23,7 +23,7 @@ maintainer = "Erica Z <zerica@callcc.eu>"
 license = "BSD-3-Clause"
 url = "https://ispc.github.io"
 source = f"https://github.com/ispc/ispc/archive/refs/tags/v{pkgver}.tar.gz"
-sha256 = "a45ec5402d8a3b23d752125a083fa031becf093b8304ccec55b1c2f37b5479c3"
+sha256 = "6f00038e0e86e90474f3117c3b393f6695a8fbe1b3d8fe3b1a0baf197dfb7557"
 
 
 def post_install(self):

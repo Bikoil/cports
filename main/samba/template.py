@@ -1,12 +1,13 @@
 # TODO: service files, cleanup
 pkgname = "samba"
-pkgver = "4.21.0"
-pkgrel = 1
+pkgver = "4.21.1"
+pkgrel = 2
 build_style = "waf"
 configure_script = "buildtools/bin/waf"
 configure_args = [
     "--enable-fhs",
     "--sbindir=/usr/bin",
+    "--libexecdir=/usr/lib",  # XXX drop libexec
     "--localstatedir=/var",
     "--sysconfdir=/etc",
     "--with-piddir=/run/samba",
@@ -73,6 +74,7 @@ makedepends = [
     "libedit-readline-devel",
     "libtirpc-devel",
     "linux-pam-devel",
+    "lmdb-devel",
     "musl-bsd-headers",
     "musl-nscd",
     "ncurses-devel",
@@ -94,7 +96,7 @@ maintainer = "q66 <q66@chimera-linux.org>"
 license = "GPL-3.0-or-later"
 url = "https://www.samba.org"
 source = f"https://download.samba.org/pub/samba/stable/samba-{pkgver}.tar.gz"
-sha256 = "09bb56db4ce003cafdbebe9bad368c4f4ff1945f732d18077d52f36ab20cef88"
+sha256 = "bd02f55da538358c929505b21fdd8aeba53027eab14c849432a53ed0bae1c7c2"
 tool_flags = {"CFLAGS": ["-D_BSD_SOURCE"]}
 env = {"PYTHONHASHSEED": "1"}
 # check needs --enable-selftest, which needs extra system dependencies
@@ -145,8 +147,8 @@ def _(self):
         "usr/bin/samba-tool",
         "usr/bin/smbpasswd",
         "usr/bin/testparm",
-        "usr/libexec/samba/rpcd_*",
-        "usr/libexec/samba/samba-dcerpcd",
+        "usr/lib/samba/rpcd_*",
+        "usr/lib/samba/samba-dcerpcd",
         "usr/share/man/man1/dbwrap_tool.1",
         "usr/share/man/man1/nmblookup.1",
         "usr/share/man/man1/testparm.1",
@@ -282,7 +284,7 @@ def _(self):
         "usr/bin/smbtree",
         "usr/bin/wspsearch",
         "usr/lib/cups/backend/smb",
-        "usr/libexec/samba/smbspool_krb5_wrapper",
+        "usr/lib/samba/smbspool_krb5_wrapper",
         "usr/share/man/man1/mdsearch.1",
         "usr/share/man/man1/rpcclient.1",
         "usr/share/man/man1/smbcacls.1",
@@ -351,7 +353,7 @@ def _(self):
         "usr/bin/ping_pong",
         "usr/lib/libctdb-event-client-private-samba.so",
         "usr/lib/libtalloc-report-private-samba.so",
-        "usr/libexec/ctdb",
+        "usr/lib/ctdb",
         "usr/share/ctdb",
         "usr/share/man/man1/ctdb*.1",
         "usr/share/man/man1/ltdbtool.1",

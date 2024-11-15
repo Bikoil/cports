@@ -1,5 +1,5 @@
 pkgname = "wasmtime"
-pkgver = "25.0.2"
+pkgver = "26.0.1"
 pkgrel = 0
 # no implementation for other architectures
 archs = ["aarch64", "riscv64", "x86_64"]
@@ -25,7 +25,7 @@ maintainer = "psykose <alice@ayaya.dev>"
 license = "Apache-2.0"
 url = "https://wasmtime.dev"
 source = f"https://github.com/bytecodealliance/wasmtime/releases/download/v{pkgver}/wasmtime-v{pkgver}-src.tar.gz"
-sha256 = "1a2df663e463673fefcdc3626a6f6dbe8aa7a3ba71162d8c0e2e86d3381f3048"
+sha256 = "a78c032fe812d2fe79b469f29bf345a691dab203c2733e2a41764daf379ef8d6"
 # wast tests take like an hour
 options = ["!check"]
 

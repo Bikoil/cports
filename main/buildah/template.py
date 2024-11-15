@@ -1,5 +1,5 @@
 pkgname = "buildah"
-pkgver = "1.37.4"
+pkgver = "1.38.0"
 pkgrel = 0
 build_style = "go"
 make_build_args = ["./cmd/..."]
@@ -32,6 +32,6 @@ url = "https://buildah.io"
 source = (
     f"https://github.com/containers/buildah/archive/refs/tags/v{pkgver}.tar.gz"
 )
-sha256 = "6e81e01b6a4f6e14c9cd12766dfa1dcf272f6b832bf32bf78e0567eb44b9c065"
+sha256 = "e8ddd23e344c45afae27bf6158304300c77cd738063d99221f7534c37f195f0c"
 # needs subid config in the chroot
 options = ["!check"]

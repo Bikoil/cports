@@ -1,6 +1,6 @@
 pkgname = "fluidsynth"
-pkgver = "2.3.6"
-pkgrel = 1
+pkgver = "2.4.0"
+pkgrel = 0
 build_style = "cmake"
 configure_args = [
     "-DLIB_SUFFIX=",
@@ -23,7 +23,7 @@ maintainer = "q66 <q66@chimera-linux.org>"
 license = "LGPL-2.1-or-later"
 url = "https://www.fluidsynth.org"
 source = f"https://github.com/FluidSynth/fluidsynth/archive/v{pkgver}.tar.gz"
-sha256 = "3340d73286b28fe6e5150fbe12648d4640e86c64c228878b572773bd08cac531"
+sha256 = "fd4d216a3030abc56a339985ab0506328660cd77b2d71dd98c240c58c03d8f7f"
 # CFI: doesn't work (run drumstick-vpiano)
 hardening = ["vis", "!cfi"]
 

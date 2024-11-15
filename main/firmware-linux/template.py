@@ -1,6 +1,6 @@
 # also update ucode-amd when updating
 pkgname = "firmware-linux"
-pkgver = "20240909"
+pkgver = "20241110"
 pkgrel = 0
 hostmakedepends = ["rdfind"]
 pkgdesc = "Binary firmware blobs for the Linux kernel"
@@ -8,7 +8,7 @@ maintainer = "q66 <q66@chimera-linux.org>"
 license = "custom:linux-firmware"
 url = "https://www.kernel.org"
 source = f"https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/snapshot/linux-firmware-{pkgver}.tar.gz"
-sha256 = "93e9b6ae2240661639c874f5fc38f677d18afe365b17a13fee6b4fc4fba42c10"
+sha256 = "c8a561dfdbd54157692fe166b84a173f9bc01f89c78f6196863beea2450e4938"
 options = ["empty"]
 
 _arch = self.profile().arch
@@ -292,6 +292,7 @@ _pkgs = [
     ("rockchip", "Rockchip SoCs", _arch_arm64, "soc", ["rockchip"]),
     ("rp2", "Comtrol RocketPort 2", None, "misc", ["rp2.fw*"]),
     ("rsi", "Redpine RSI91X WLAN/Bluetooth", None, "network", ["rsi*"]),
+    ("rt1320", "Realtek sound MCU", None, "audio", ["realtek/rt1320"]),
     ("rtl_bt", "Realtek Bluetooth", None, "network", ["rtl_bt"]),
     ("rtl_nic", "Realtek Ethernet", None, "network", ["rtl_nic"]),
     (
@@ -389,6 +390,11 @@ def install(self):
             "ZSTD_CLEVEL": "9",
             "ZSTD_NBTHREADS": str(min(4, self.make_jobs)),
         },
+    )
+    self.do(
+        "./dedup-firmware.sh",
+        "-v",
+        str(self.chroot_destdir / "usr/lib/firmware"),
     )
 
     self.install_license("WHENCE")

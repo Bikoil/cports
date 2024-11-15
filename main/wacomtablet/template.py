@@ -1,5 +1,5 @@
 pkgname = "wacomtablet"
-pkgver = "6.2.0"
+pkgver = "6.2.3"
 pkgrel = 0
 build_style = "cmake"
 # X*: fail outside x11
@@ -37,4 +37,4 @@ maintainer = "Jami Kettunen <jami.kettunen@protonmail.com>"
 license = "GPL-2.0-or-later"
 url = "https://invent.kde.org/plasma/wacomtablet"
 source = f"$(KDE_SITE)/plasma/{pkgver}/wacomtablet-{pkgver}.tar.xz"
-sha256 = "9a5d9f6ba37243904d4cbf91c87493b20576bebd258a75c1f66093b3762e5de3"
+sha256 = "a681bc938e658d3ac1bf3723bdcb51bd91e4d8188e8749d10f3a0f16f5a505bf"

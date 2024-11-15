@@ -1,6 +1,6 @@
 pkgname = "prismlauncher"
-pkgver = "8.4"
-pkgrel = 2
+pkgver = "9.1"
+pkgrel = 0
 build_style = "cmake"
 configure_env = {"JAVA_HOME": "/usr/lib/jvm/java-17-openjdk"}
 hostmakedepends = [
@@ -10,12 +10,14 @@ hostmakedepends = [
     "openjdk17-jdk",
     "pkgconf",
     "qt6-qtbase",
+    "scdoc",
 ]
 makedepends = [
     "cmark",  # cmake detection
     "cmark-devel",
     "qt6-qt5compat-devel",
     "qt6-qtbase-devel",
+    "qt6-qtnetworkauth-devel",
     "qt6-qtsvg-devel",
     "quazip-devel",
     "zlib-ng-compat-devel",
@@ -25,7 +27,7 @@ maintainer = "aurelia <git@elia.garden>"
 license = "GPL-3.0-or-later"
 url = "https://github.com/PrismLauncher/PrismLauncher"
 source = f"{url}/releases/download/{pkgver}/prismlauncher-{pkgver}.tar.gz"
-sha256 = "a4df9059559df2e410ddf933e05fe4bffaa01631c6eeb55e63af4a2d0d719726"
+sha256 = "0aac56ec6b039e28f0605e7d86ebf602ee28dd9e4c7a16915ca974104954e832"
 
 
 @subpackage("prismlauncher-natives")

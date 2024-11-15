@@ -1294,7 +1294,7 @@ A more comprehensive `build_style`, written around `cbuild.util.gnu_configure`.
 Default values:
 
 * `make_dir` = `build`
-* `configure_gen` = `["autoreconf", "-if"]`
+* `configure_gen` = `["autoreconf", "-if", "-W", "none"]`
 
 Sets `configure`, `build`, `check`, `install`.
 
@@ -3117,8 +3117,8 @@ When `name` is not given, `self.pkgname` is used.
 ##### def install_service(self, src, name = None, enable = False)
 
 If `src` is a file path that does not have the `.user` extension, it installs
-the file in `etc/dinit.d` with mode `0o644`. Otherwise, it installs the file
-in `etc/dinit.d/user` with its extension removed. If `name` is provided, it
+the file in `usr/lib/dinit.d` with mode `0o644`. Otherwise, it installs the file
+in `usr/lib/dinit.d/user` with its extension removed. If `name` is provided, it
 is used as it is without changes.
 
 If `enable` is `True`, the service will be implicitly enabled as system service.
@@ -3478,7 +3478,7 @@ If `generator` is `None`, it is taken from `pkg.configure_gen`. If it ends
 up being non-empty, it is used as a command to generate the `configure_script`
 and run in `cwd` with the same environment as the subsequent configure script.
 Generally for `gnu_configure` build-styled templates, this will end up calling
-`autoreconf -if` unless overridden.
+`autoreconf -if -W none` unless overridden.
 
 Then, the `configure_script` is called (which lives in `configure_dir`, by
 default `.`, which lives in `chroot_cwd`, and its name is by default

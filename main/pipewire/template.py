@@ -1,5 +1,5 @@
 pkgname = "pipewire"
-pkgver = "1.2.5"
+pkgver = "1.2.6"
 pkgrel = 1
 build_style = "meson"
 configure_args = [
@@ -56,6 +56,7 @@ makedepends = [
     "v4l-utils-devel",
 ]
 depends = [
+    "dinit-dbus",
     "virtual:pipewire-session-manager!pipewire-session-manager-none",
     "rtkit",
 ]
@@ -77,7 +78,7 @@ maintainer = "q66 <q66@chimera-linux.org>"
 license = "MIT"
 url = "https://pipewire.org"
 source = f"https://gitlab.freedesktop.org/pipewire/pipewire/-/archive/{pkgver}/pipewire-{pkgver}.tar.gz"
-sha256 = "4c3209c78ce63af6bd2658e5092c220d844fc2b7a039bbbb950e71890cc8ac78"
+sha256 = "8d9b4e95dba33d218c760fecbb71672c86a56917f803e96fe6c3af62fa783a95"
 
 if self.profile().endian == "big":
     configure_args += [

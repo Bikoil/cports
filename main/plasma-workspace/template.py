@@ -1,5 +1,5 @@
 pkgname = "plasma-workspace"
-pkgver = "6.2.0"
+pkgver = "6.2.3"
 pkgrel = 0
 build_style = "cmake"
 # TODO: -DINSTALL_SDDM_WAYLAND_SESSION=ON experiments?
@@ -122,13 +122,13 @@ checkdepends = [
     *depends,
 ]
 # kde-portals.conf is now here
-replaces = ["xdg-desktop-portal-kde<6.2.0"]
+replaces = ["xdg-desktop-portal-kde<6.2.1"]
 pkgdesc = "KDE Plasma Workspace"
 maintainer = "Jami Kettunen <jami.kettunen@protonmail.com>"
 license = "MIT AND GPL-3.0-only AND LGPL-3.0-only"
 url = "https://api.kde.org/plasma/plasma-workspace/html"
-source = f"$(KDE_SITE)/plasma/{pkgver}/plasma-workspace-{pkgver}.tar.xz"
-sha256 = "2d4268cbae757631be57d69d34fc02c8d0204762515370c9679ecb2aa2afdf33"
+source = f"$(KDE_SITE)/plasma/{'.'.join(pkgver.split('.')[0:3])}/plasma-workspace-{pkgver}.tar.xz"
+sha256 = "9f68007bcdca70157d93fa1c1e925bffd87b21d2b71005d2a50f8a6f27dd5998"
 hardening = ["vis"]
 
 

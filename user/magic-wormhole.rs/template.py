@@ -1,6 +1,6 @@
 pkgname = "magic-wormhole.rs"
-pkgver = "0.7.1"
-pkgrel = 1
+pkgver = "0.7.3"
+pkgrel = 0
 build_style = "cargo"
 make_build_args = ["--bins"]
 hostmakedepends = ["cargo-auditable"]
@@ -10,7 +10,7 @@ maintainer = "tulilirockz <tulilirockz@outlook.com>"
 license = "EUPL-1.2"
 url = "https://github.com/magic-wormhole/magic-wormhole.rs"
 source = f"{url}/archive/refs/tags/{pkgver}.tar.gz"
-sha256 = "c6e2acd3cccd982f449d26184d714d4cf813f51b8b75b3e36ecbb78565b3f4e8"
+sha256 = "f787a31113af560fcfea4ef2d6096f860253450ce2207d436edb83bf6be2b1e1"
 # generates completions with host bin
 options = ["!check", "!cross"]
 
